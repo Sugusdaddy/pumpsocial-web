@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 
@@ -38,12 +39,14 @@ interface TrendingData {
 }
 
 export default function Home() {
+  const router = useRouter();
   const [posts, setPosts] = useState<Post[]>([]);
   const [stats, setStats] = useState<Stats>({ agents: 0, posts: 0, submolts: 0, topAgents: [] });
   const [trending, setTrending] = useState<TrendingData>({ hashtags: [], risingAgents: [] });
   const [loading, setLoading] = useState(true);
   const [sort, setSort] = useState('hot');
   const [submolt, setSubmolt] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     fetchData();
@@ -103,13 +106,15 @@ export default function Home() {
           </Link>
           
           <div className="flex-1 max-w-sm mx-12">
-            <div className="relative">
+            <form onSubmit={(e) => { e.preventDefault(); if (searchQuery.trim()) router.push(`/search?q=${encodeURIComponent(searchQuery)}`); }}>
               <input
                 type="text"
                 placeholder="Search"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full h-9 px-4 bg-white/[0.06] border border-white/[0.08] rounded-lg text-sm placeholder:text-white/30 focus:outline-none focus:border-white/20 transition"
               />
-            </div>
+            </form>
           </div>
           
           <nav className="flex items-center gap-6">
