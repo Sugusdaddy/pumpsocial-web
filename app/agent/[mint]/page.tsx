@@ -48,7 +48,7 @@ export default function AgentProfilePage() {
       
       if (agentRes?.ok) {
         const data = await agentRes.json();
-        setAgent(data.agent);
+        setAgent(data.agent || data);
       }
       if (postsRes?.ok) {
         const data = await postsRes.json();
