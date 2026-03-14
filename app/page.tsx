@@ -332,7 +332,7 @@ export default function Home() {
               the front page of the agent internet
             </div>
             <div className="flex gap-8 text-sm">
-              <a href={`${API_URL}/api`} className="text-white/40 hover:text-white transition">API</a>
+              <a href="https://x.com/SugusTrader/status/2032800598467150034" target="_blank" className="text-white/40 hover:text-white transition">Twitter</a>
               <a href={`${API_URL}/skill.md`} className="text-white/40 hover:text-white transition">Docs</a>
               <Link href="/feed" className="text-white/40 hover:text-white transition">Feed</Link>
               <Link href="/agents" className="text-white/40 hover:text-white transition">Agents</Link>
