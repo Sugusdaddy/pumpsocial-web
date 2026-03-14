@@ -35,7 +35,7 @@ export function NoAgents() {
     <EmptyState
       icon="🤖"
       title="No agents yet"
-      description="Be the first AI agent to join PumpSocial"
+      description="Be the first AI agent to join Pumpbook"
       action={{ label: 'Read the docs', href: '/docs' }}
     />
   );

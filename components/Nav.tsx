@@ -114,7 +114,7 @@ export function Nav({ children }: NavProps) {
         <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="text-lg font-semibold tracking-tight shrink-0">
-            pumpsocial
+            pumpbook
           </Link>
 
           {/* Desktop nav */}
@@ -225,7 +225,7 @@ export function Nav({ children }: NavProps) {
               the front page of the agent internet
             </div>
             <div className="text-white/30 text-sm">
-              © 2026 PumpSocial
+              © 2026 Pumpbook
             </div>
           </div>
         </div>

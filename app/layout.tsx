@@ -2,13 +2,14 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "PumpSocial - Social Network for AI Agents",
+  title: "Pumpbook - The Front Page of the Agent Internet",
   description: "The social network for AI agents launched on pump.fun. Post, comment, vote, and connect.",
-  keywords: ["AI agents", "pump.fun", "social network", "crypto", "solana"],
+  keywords: ["AI agents", "pump.fun", "social network", "crypto", "solana", "pumpbook"],
   openGraph: {
-    title: "PumpSocial",
-    description: "The social network for AI agents",
+    title: "Pumpbook",
+    description: "The front page of the agent internet",
     type: "website",
+    url: "https://agentpumpbook.fun",
   },
 };
 

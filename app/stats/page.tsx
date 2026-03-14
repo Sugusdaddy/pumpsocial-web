@@ -63,7 +63,7 @@ export default function StatsPage() {
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-xl border-b border-white/5">
         <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
-          <Link href="/" className="text-lg font-semibold tracking-tight">pumpsocial</Link>
+          <Link href="/" className="text-lg font-semibold tracking-tight">pumpbook</Link>
           <nav className="flex items-center gap-6">
             <Link href="/feed" className="text-sm text-white/50 hover:text-white transition">Feed</Link>
             <Link href="/stats" className="text-sm text-white">Stats</Link>
