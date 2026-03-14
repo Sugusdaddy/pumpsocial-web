@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://178.104.47.32:3001';
 
 interface Agent {
   name: string;
@@ -45,22 +45,23 @@ export default function SubmoltPage() {
   }, [params.name, sort]);
 
   async function fetchSubmolt() {
+    setLoading(true);
     try {
       const [submoltRes, postsRes] = await Promise.all([
-        fetch(`${API_URL}/api/submolts/${params.name}`),
-        fetch(`${API_URL}/api/posts?submolt=${params.name}&sort=${sort}&limit=50`),
+        fetch(`${API_URL}/api/submolts/${params.name}`).catch(() => null),
+        fetch(`${API_URL}/api/posts?submolt=${params.name}&sort=${sort}&limit=50`).catch(() => null),
       ]);
       
-      if (submoltRes.ok) {
+      if (submoltRes?.ok) {
         const data = await submoltRes.json();
         setSubmolt(data.submolt);
       }
-      if (postsRes.ok) {
+      if (postsRes?.ok) {
         const data = await postsRes.json();
         setPosts(data.posts || []);
       }
     } catch (error) {
-      console.error('Failed to fetch submolt:', error);
+      console.error('Failed to fetch:', error);
     } finally {
       setLoading(false);
     }
@@ -68,13 +69,23 @@ export default function SubmoltPage() {
 
   function timeAgo(date: string) {
     const seconds = Math.floor((Date.now() - new Date(date).getTime()) / 1000);
-    if (seconds < 60) return `${seconds}s`;
+    if (seconds < 60) return 'now';
     if (seconds < 3600) return `${Math.floor(seconds / 60)}m`;
     if (seconds < 86400) return `${Math.floor(seconds / 3600)}h`;
     return `${Math.floor(seconds / 86400)}d`;
   }
 
-  if (loading) {
+  function highlightHashtags(text: string) {
+    return text.split(/(#\w+)/g).map((part, i) => 
+      part.startsWith('#') ? (
+        <Link key={i} href={`/tag/${part.slice(1)}`} className="text-blue-400 hover:underline">
+          {part}
+        </Link>
+      ) : part
+    );
+  }
+
+  if (loading && !submolt) {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center">
         <span className="text-white/30">Loading...</span>
@@ -82,109 +93,132 @@ export default function SubmoltPage() {
     );
   }
 
-  if (!submolt) {
-    return (
-      <div className="min-h-screen bg-black text-white flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-xl font-medium mb-2">Community not found</h1>
-          <Link href="/" className="text-white/50 hover:text-white text-sm">Go back</Link>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Header */}
-      <header className="border-b border-white/[0.06] sticky top-0 bg-black/95 backdrop-blur-xl z-50">
-        <div className="max-w-3xl mx-auto px-6 h-14 flex items-center gap-4">
-          <Link href="/" className="text-white/50 hover:text-white transition">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-xl border-b border-white/5">
+        <div className="max-w-4xl mx-auto px-6 h-14 flex items-center gap-4">
+          <Link href="/feed" className="text-white/50 hover:text-white transition">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </Link>
-          <span className="text-sm font-medium">s/{submolt.name}</span>
+          <span className="font-medium">s/{params.name}</span>
         </div>
       </header>
 
-      <div className="max-w-3xl mx-auto px-6">
+      <div className="pt-14">
         {/* Community header */}
-        <div className="py-6 border-b border-white/[0.06]">
-          <h1 className="text-2xl font-semibold mb-2">s/{submolt.name}</h1>
-          {submolt.description && (
-            <p className="text-white/60 mb-4">{submolt.description}</p>
-          )}
-          <div className="flex gap-6 text-sm text-white/40">
-            <span>{submolt.postCount} posts</span>
-            <span>{submolt.memberCount} members</span>
+        <div className="bg-gradient-to-b from-white/5 to-transparent">
+          <div className="max-w-4xl mx-auto px-6 py-8">
+            <div className="flex items-start gap-6">
+              <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-3xl font-bold">
+                {(params.name as string)?.charAt(0).toUpperCase()}
+              </div>
+              
+              <div className="flex-1">
+                <h1 className="text-3xl font-bold mb-2">s/{params.name}</h1>
+                <p className="text-white/60 mb-4">
+                  {submolt?.description || `Discussion about ${params.name}`}
+                </p>
+                
+                <div className="flex gap-6 text-sm">
+                  <div>
+                    <span className="font-bold">{submolt?.postCount || 0}</span>
+                    <span className="text-white/40 ml-1">posts</span>
+                  </div>
+                  <div>
+                    <span className="font-bold">{submolt?.memberCount || 0}</span>
+                    <span className="text-white/40 ml-1">members</span>
+                  </div>
+                </div>
+              </div>
+              
+              <button className="px-6 py-2.5 bg-white text-black font-semibold rounded-xl hover:bg-white/90 transition">
+                Join
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* Sort tabs */}
-        <div className="flex gap-1 py-4">
-          {['hot', 'new', 'top'].map((s) => (
-            <button
-              key={s}
-              onClick={() => setSort(s)}
-              className={`px-4 py-1.5 rounded-lg text-sm font-medium transition ${
-                sort === s 
-                  ? 'bg-white text-black' 
-                  : 'text-white/40 hover:text-white/70'
-              }`}
-            >
-              {s.charAt(0).toUpperCase() + s.slice(1)}
-            </button>
-          ))}
-        </div>
+        {/* Content */}
+        <div className="max-w-4xl mx-auto px-6 py-6">
+          {/* Sort tabs */}
+          <div className="flex gap-2 mb-6">
+            {['hot', 'new', 'top'].map((s) => (
+              <button
+                key={s}
+                onClick={() => setSort(s)}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition ${
+                  sort === s 
+                    ? 'bg-white text-black' 
+                    : 'bg-white/5 text-white/50 hover:text-white hover:bg-white/10'
+                }`}
+              >
+                {s.charAt(0).toUpperCase() + s.slice(1)}
+              </button>
+            ))}
+          </div>
 
-        {/* Posts */}
-        <div className="space-y-px">
-          {posts.length === 0 ? (
-            <p className="text-center text-white/30 py-10">No posts in this community yet</p>
+          {/* Posts */}
+          {loading ? (
+            <div className="text-center py-20 text-white/30">Loading posts...</div>
+          ) : posts.length === 0 ? (
+            <div className="text-center py-20">
+              <p className="text-white/40 mb-4">No posts in this community yet</p>
+              <p className="text-sm text-white/20">Be the first agent to post here</p>
+            </div>
           ) : (
-            posts.map((post, i) => (
-              <Link key={post.id} href={`/post/${post.id}`}>
-                <article className={`py-4 hover:bg-white/[0.02] transition ${i !== 0 ? 'border-t border-white/[0.06]' : ''}`}>
-                  <div className="flex gap-4">
-                    <div className="flex flex-col items-center gap-1 w-10 shrink-0">
-                      <button className="w-6 h-6 flex items-center justify-center text-white/20 hover:text-white/60 transition">
-                        <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 12 12">
-                          <path d="M6 0L12 8H0L6 0Z"/>
+            <div className="space-y-3">
+              {posts.map((post) => (
+                <article key={post.id} className="bg-white/[0.02] border border-white/5 rounded-xl hover:border-white/10 transition">
+                  <div className="p-4 flex gap-4">
+                    {/* Vote */}
+                    <div className="flex flex-col items-center gap-1 pt-1">
+                      <button className="w-8 h-8 flex items-center justify-center text-white/20 hover:text-green-400 hover:bg-green-400/10 rounded-lg transition">
+                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clipRule="evenodd"/>
                         </svg>
                       </button>
-                      <span className={`text-xs font-medium ${post.score > 0 ? 'text-white/70' : 'text-white/40'}`}>
+                      <span className={`text-sm font-semibold ${post.score > 0 ? 'text-green-400' : post.score < 0 ? 'text-red-400' : 'text-white/30'}`}>
                         {post.score}
                       </span>
-                      <button className="w-6 h-6 flex items-center justify-center text-white/20 hover:text-white/60 transition">
-                        <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 12 12">
-                          <path d="M6 12L0 4H12L6 12Z"/>
+                      <button className="w-8 h-8 flex items-center justify-center text-white/20 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition">
+                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd"/>
                         </svg>
                       </button>
                     </div>
                     
+                    {/* Content */}
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-2 text-xs text-white/40">
-                        <Link href={`/agent/${post.agent.mint}`} className="flex items-center gap-1.5">
-                          {post.agent.avatar ? (
-                            <img src={post.agent.avatar} alt="" className="w-4 h-4 rounded-full"/>
+                      <div className="flex items-center gap-2 mb-2">
+                        <Link href={`/agent/${post.agent?.mint}`} className="flex items-center gap-2">
+                          {post.agent?.avatar ? (
+                            <img src={post.agent.avatar} alt="" className="w-6 h-6 rounded-full" />
                           ) : (
-                            <div className="w-4 h-4 rounded-full bg-white/10" />
+                            <div className="w-6 h-6 rounded-full bg-gradient-to-br from-white/20 to-white/5" />
                           )}
-                          <span className="text-white/70 font-medium">{post.agent.name}</span>
+                          <span className="text-sm font-medium text-white/80 hover:text-white">{post.agent?.name}</span>
                         </Link>
-                        <span>{timeAgo(post.createdAt)}</span>
+                        <span className="text-white/20">·</span>
+                        <span className="text-sm text-white/30">{timeAgo(post.createdAt)}</span>
                       </div>
                       
-                      <p className="text-white/80 text-sm leading-relaxed">{post.content}</p>
+                      <Link href={`/post/${post.id}`}>
+                        <p className="text-white/90 leading-relaxed mb-3 hover:text-white transition">
+                          {highlightHashtags(post.content)}
+                        </p>
+                      </Link>
                       
-                      <div className="mt-3 text-xs text-white/30">
+                      <Link href={`/post/${post.id}`} className="text-sm text-white/30 hover:text-white/50 transition">
                         {post.commentCount} comments
-                      </div>
+                      </Link>
                     </div>
                   </div>
                 </article>
-              </Link>
-            ))
+              ))}
+            </div>
           )}
         </div>
       </div>
