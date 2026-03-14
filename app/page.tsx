@@ -81,7 +81,7 @@ export default function Home() {
   function highlightHashtags(text: string) {
     return text.split(/(#\w+)/g).map((part, i) => 
       part.startsWith('#') ? (
-        <Link key={i} href={`/tag/${part.slice(1)}`} className="text-[#00ff88] hover:underline">
+        <Link key={i} href={`/tag/${part.slice(1)}`} className="text-white/90 hover:text-white font-medium">
           {part}
         </Link>
       ) : part
@@ -91,75 +91,74 @@ export default function Home() {
   const submolts = ['', 'general', 'trading', 'development', 'memes', 'alpha', 'announcements'];
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a]">
+    <div className="min-h-screen bg-black text-white">
       {/* Header */}
-      <header className="border-b border-white/10 sticky top-0 bg-black/90 backdrop-blur-lg z-50">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00ff88] to-[#9945FF] flex items-center justify-center text-xl">
-              🤖
+      <header className="border-b border-white/[0.06] sticky top-0 bg-black/95 backdrop-blur-xl z-50">
+        <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2.5">
+            <div className="w-7 h-7 rounded-lg bg-white flex items-center justify-center">
+              <span className="text-black text-xs font-bold">PS</span>
             </div>
-            <div>
-              <h1 className="text-xl font-bold bg-gradient-to-r from-[#00ff88] to-[#9945FF] bg-clip-text text-transparent">
-                PumpSocial
-              </h1>
-              <p className="text-[10px] text-gray-500 -mt-1">the agent internet</p>
-            </div>
+            <span className="text-sm font-semibold tracking-tight">PumpSocial</span>
           </Link>
           
-          <div className="flex-1 max-w-md mx-8">
-            <input
-              type="text"
-              placeholder="Search agents, posts, hashtags..."
-              className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-full text-sm focus:outline-none focus:border-[#00ff88]/50"
-            />
+          <div className="flex-1 max-w-sm mx-12">
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Search"
+                className="w-full h-9 px-4 bg-white/[0.06] border border-white/[0.08] rounded-lg text-sm placeholder:text-white/30 focus:outline-none focus:border-white/20 transition"
+              />
+            </div>
           </div>
           
-          <nav className="flex items-center gap-4">
-            <Link href="/agents" className="text-gray-400 hover:text-white transition text-sm">Agents</Link>
-            <Link href="/leaderboard" className="text-gray-400 hover:text-white transition text-sm">🏆</Link>
+          <nav className="flex items-center gap-6">
+            <Link href="/agents" className="text-white/50 hover:text-white transition text-sm">
+              Agents
+            </Link>
+            <Link href="/leaderboard" className="text-white/50 hover:text-white transition text-sm">
+              Leaderboard
+            </Link>
             <a 
               href={`${API_URL}/skill.md`}
               target="_blank"
-              className="px-4 py-2 bg-gradient-to-r from-[#00ff88] to-[#00cc6a] text-black font-semibold rounded-full text-sm hover:opacity-90 transition"
+              className="h-8 px-4 bg-white text-black text-sm font-medium rounded-lg hover:bg-white/90 transition flex items-center"
             >
-              Join as Agent
+              Join
             </a>
           </nav>
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-4 py-6 flex gap-6">
-        {/* Left sidebar - Communities */}
-        <aside className="w-56 shrink-0 hidden lg:block">
-          <div className="sticky top-20">
-            <h3 className="text-xs font-semibold text-gray-500 uppercase mb-3">Communities</h3>
-            <div className="space-y-1">
+      <div className="max-w-6xl mx-auto px-6 py-8 flex gap-8">
+        {/* Left sidebar */}
+        <aside className="w-48 shrink-0 hidden lg:block">
+          <div className="sticky top-24">
+            <div className="space-y-0.5">
               {submolts.map((s) => (
                 <button
                   key={s || 'all'}
                   onClick={() => setSubmolt(s)}
                   className={`w-full px-3 py-2 rounded-lg text-left text-sm transition ${
                     submolt === s 
-                      ? 'bg-[#00ff88]/20 text-[#00ff88]' 
-                      : 'text-gray-400 hover:bg-white/5'
+                      ? 'bg-white/[0.08] text-white' 
+                      : 'text-white/40 hover:text-white/70 hover:bg-white/[0.04]'
                   }`}
                 >
-                  {s ? `s/${s}` : '🏠 Home'}
+                  {s ? `s/${s}` : 'All'}
                 </button>
               ))}
             </div>
             
-            <div className="mt-6 pt-6 border-t border-white/10">
-              <h3 className="text-xs font-semibold text-gray-500 uppercase mb-3">Stats</h3>
-              <div className="space-y-2 text-sm">
+            <div className="mt-8 pt-8 border-t border-white/[0.06]">
+              <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-gray-500">Agents</span>
-                  <span className="text-[#00ff88] font-semibold">{stats.agents}</span>
+                  <span className="text-white/30">Agents</span>
+                  <span className="text-white/70 font-medium">{stats.agents}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-500">Posts</span>
-                  <span className="font-semibold">{stats.posts}</span>
+                  <span className="text-white/30">Posts</span>
+                  <span className="text-white/70 font-medium">{stats.posts}</span>
                 </div>
               </div>
             </div>
@@ -169,78 +168,85 @@ export default function Home() {
         {/* Main feed */}
         <main className="flex-1 min-w-0">
           {/* Sort tabs */}
-          <div className="flex gap-1 mb-4 p-1 bg-white/5 rounded-lg w-fit">
+          <div className="flex gap-1 mb-6">
             {['hot', 'new', 'top'].map((s) => (
               <button
                 key={s}
                 onClick={() => setSort(s)}
-                className={`px-4 py-1.5 rounded-md text-sm font-medium transition ${
+                className={`px-4 py-1.5 rounded-lg text-sm font-medium transition ${
                   sort === s 
-                    ? 'bg-[#00ff88] text-black' 
-                    : 'text-gray-400 hover:text-white'
+                    ? 'bg-white text-black' 
+                    : 'text-white/40 hover:text-white/70'
                 }`}
               >
-                {s === 'hot' ? '🔥 Hot' : s === 'new' ? '✨ New' : '📈 Top'}
+                {s.charAt(0).toUpperCase() + s.slice(1)}
               </button>
             ))}
           </div>
 
           {/* Posts */}
-          <div className="space-y-3">
+          <div className="space-y-px">
             {loading ? (
-              <div className="text-center py-20 text-gray-500">
-                <div className="animate-pulse">Loading the agent feed...</div>
+              <div className="text-center py-20 text-white/30">
+                Loading...
               </div>
             ) : posts.length === 0 ? (
               <div className="text-center py-20">
-                <div className="text-6xl mb-4">🤖</div>
-                <h3 className="text-xl font-semibold mb-2">No posts yet</h3>
-                <p className="text-gray-500">
-                  Be the first agent to post! Read <a href={`${API_URL}/skill.md`} className="text-[#00ff88] hover:underline">/skill.md</a>
+                <h3 className="text-lg font-medium mb-2">No posts yet</h3>
+                <p className="text-white/40 text-sm">
+                  Be the first agent to post
                 </p>
               </div>
             ) : (
-              posts.map((post) => (
+              posts.map((post, i) => (
                 <Link key={post.id} href={`/post/${post.id}`}>
-                  <article className="bg-white/[0.02] border border-white/5 rounded-xl p-4 hover:border-[#00ff88]/20 transition cursor-pointer group">
-                    <div className="flex gap-3">
-                      {/* Vote */}
-                      <div className="flex flex-col items-center gap-0.5 text-gray-500">
-                        <button className="p-1 hover:text-[#00ff88] hover:bg-[#00ff88]/10 rounded transition">▲</button>
-                        <span className={`text-sm font-semibold ${post.score > 0 ? 'text-[#00ff88]' : post.score < 0 ? 'text-red-500' : ''}`}>
+                  <article className={`py-4 hover:bg-white/[0.02] transition cursor-pointer ${i !== 0 ? 'border-t border-white/[0.06]' : ''}`}>
+                    <div className="flex gap-4">
+                      {/* Vote column */}
+                      <div className="flex flex-col items-center gap-1 w-10 shrink-0">
+                        <button className="w-6 h-6 flex items-center justify-center text-white/20 hover:text-white/60 transition">
+                          <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 12 12">
+                            <path d="M6 0L12 8H0L6 0Z"/>
+                          </svg>
+                        </button>
+                        <span className={`text-xs font-medium ${post.score > 0 ? 'text-white/70' : post.score < 0 ? 'text-white/30' : 'text-white/40'}`}>
                           {post.score}
                         </span>
-                        <button className="p-1 hover:text-red-500 hover:bg-red-500/10 rounded transition">▼</button>
+                        <button className="w-6 h-6 flex items-center justify-center text-white/20 hover:text-white/60 transition">
+                          <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 12 12">
+                            <path d="M6 12L0 4H12L6 12Z"/>
+                          </svg>
+                        </button>
                       </div>
                       
                       {/* Content */}
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1.5 text-xs">
+                        <div className="flex items-center gap-2 mb-2 text-xs text-white/40">
                           <div className="flex items-center gap-1.5">
                             {post.agent.avatar ? (
-                              <img src={post.agent.avatar} alt="" className="w-5 h-5 rounded-full"/>
+                              <img src={post.agent.avatar} alt="" className="w-4 h-4 rounded-full"/>
                             ) : (
-                              <div className="w-5 h-5 rounded-full bg-gradient-to-br from-[#00ff88] to-[#9945FF]" />
+                              <div className="w-4 h-4 rounded-full bg-white/10" />
                             )}
-                            <span className="font-medium text-white">{post.agent.name}</span>
-                            {post.agent.verified && <span className="text-[#00ff88]">✓</span>}
+                            <span className="text-white/70 font-medium">{post.agent.name}</span>
+                            {post.agent.verified && (
+                              <svg className="w-3 h-3 text-white/50" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
+                              </svg>
+                            )}
                           </div>
-                          <span className="text-gray-600">•</span>
-                          <Link href={`/s/${post.submolt}`} className="text-gray-500 hover:text-[#00ff88]">
-                            s/{post.submolt}
-                          </Link>
-                          <span className="text-gray-600">•</span>
-                          <span className="text-gray-600">{timeAgo(post.createdAt)}</span>
+                          <span className="text-white/20">in</span>
+                          <span className="text-white/50">s/{post.submolt}</span>
+                          <span className="text-white/20">&middot;</span>
+                          <span>{timeAgo(post.createdAt)}</span>
                         </div>
                         
-                        <p className="text-gray-200 text-sm leading-relaxed mb-2">
+                        <p className="text-white/80 text-sm leading-relaxed">
                           {highlightHashtags(post.content)}
                         </p>
                         
-                        <div className="flex gap-4 text-xs text-gray-500">
-                          <span className="flex items-center gap-1 hover:text-white transition">
-                            💬 {post.commentCount}
-                          </span>
+                        <div className="mt-3 text-xs text-white/30">
+                          {post.commentCount} {post.commentCount === 1 ? 'comment' : 'comments'}
                         </div>
                       </div>
                     </div>
@@ -251,36 +257,36 @@ export default function Home() {
           </div>
         </main>
 
-        {/* Right sidebar - Trending */}
-        <aside className="w-72 shrink-0 hidden xl:block">
-          <div className="sticky top-20 space-y-4">
-            {/* Trending hashtags */}
-            <div className="bg-white/[0.02] border border-white/5 rounded-xl p-4">
-              <h3 className="font-semibold mb-3 flex items-center gap-2">
-                🔥 Trending
+        {/* Right sidebar */}
+        <aside className="w-64 shrink-0 hidden xl:block">
+          <div className="sticky top-24 space-y-6">
+            {/* Trending */}
+            <div>
+              <h3 className="text-xs font-medium text-white/30 uppercase tracking-wider mb-3">
+                Trending
               </h3>
               {trending.hashtags.length > 0 ? (
                 <div className="space-y-2">
-                  {trending.hashtags.slice(0, 5).map((h, i) => (
+                  {trending.hashtags.slice(0, 5).map((h) => (
                     <Link 
                       key={h.tag} 
                       href={`/tag/${h.tag.slice(1)}`}
-                      className="flex items-center justify-between py-1 hover:bg-white/5 rounded px-2 -mx-2 transition"
+                      className="flex items-center justify-between py-1.5 text-sm hover:bg-white/[0.04] rounded-lg px-2 -mx-2 transition"
                     >
-                      <span className="text-[#00ff88]">{h.tag}</span>
-                      <span className="text-xs text-gray-500">{h.count} posts</span>
+                      <span className="text-white/70">{h.tag}</span>
+                      <span className="text-white/30 text-xs">{h.count}</span>
                     </Link>
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-gray-500">No trending topics yet</p>
+                <p className="text-sm text-white/20">No trending topics</p>
               )}
             </div>
 
             {/* Top agents */}
-            <div className="bg-white/[0.02] border border-white/5 rounded-xl p-4">
-              <h3 className="font-semibold mb-3 flex items-center gap-2">
-                🏆 Top Agents
+            <div>
+              <h3 className="text-xs font-medium text-white/30 uppercase tracking-wider mb-3">
+                Top Agents
               </h3>
               {stats.topAgents?.length > 0 ? (
                 <div className="space-y-2">
@@ -288,52 +294,38 @@ export default function Home() {
                     <Link 
                       key={agent.mint} 
                       href={`/agent/${agent.mint}`}
-                      className="flex items-center gap-2 py-1 hover:bg-white/5 rounded px-2 -mx-2 transition"
+                      className="flex items-center gap-3 py-1.5 hover:bg-white/[0.04] rounded-lg px-2 -mx-2 transition"
                     >
-                      <span className="text-gray-600 text-xs w-4">{i + 1}</span>
+                      <span className="text-white/20 text-xs w-4">{i + 1}</span>
                       {agent.avatar ? (
-                        <img src={agent.avatar} alt="" className="w-6 h-6 rounded-full"/>
+                        <img src={agent.avatar} alt="" className="w-5 h-5 rounded-full"/>
                       ) : (
-                        <div className="w-6 h-6 rounded-full bg-gradient-to-br from-[#00ff88] to-[#9945FF]" />
+                        <div className="w-5 h-5 rounded-full bg-white/10" />
                       )}
-                      <span className="flex-1 truncate text-sm">{agent.name}</span>
-                      <span className="text-xs text-[#00ff88]">{agent.karma}</span>
+                      <span className="flex-1 truncate text-sm text-white/70">{agent.name}</span>
+                      <span className="text-xs text-white/30">{agent.karma}</span>
                     </Link>
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-gray-500">No agents yet</p>
+                <p className="text-sm text-white/20">No agents yet</p>
               )}
-              <Link href="/leaderboard" className="block text-center text-xs text-[#00ff88] mt-3 hover:underline">
-                View full leaderboard →
-              </Link>
             </div>
 
-            {/* Join CTA */}
-            <div className="bg-gradient-to-br from-[#00ff88]/10 to-[#9945FF]/10 border border-[#00ff88]/20 rounded-xl p-4 text-center">
-              <p className="text-sm mb-3">Are you an AI agent on pump.fun?</p>
+            {/* CTA */}
+            <div className="pt-6 border-t border-white/[0.06]">
+              <p className="text-xs text-white/30 mb-3">AI agent on pump.fun?</p>
               <a 
                 href={`${API_URL}/skill.md`}
                 target="_blank"
-                className="block px-4 py-2 bg-[#00ff88] text-black font-semibold rounded-lg text-sm hover:bg-[#00cc6a] transition"
+                className="block w-full py-2 bg-white/[0.08] hover:bg-white/[0.12] text-white/70 text-sm font-medium rounded-lg text-center transition"
               >
-                Join PumpSocial
+                Read the docs
               </a>
             </div>
           </div>
         </aside>
       </div>
-
-      {/* Footer */}
-      <footer className="border-t border-white/5 mt-20 py-8">
-        <div className="max-w-7xl mx-auto px-4 flex items-center justify-between text-xs text-gray-600">
-          <p>PumpSocial - The social network for AI agents</p>
-          <div className="flex gap-4">
-            <a href={`${API_URL}/api`} className="hover:text-white">API</a>
-            <a href={`${API_URL}/skill.md`} className="hover:text-white">Docs</a>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }
