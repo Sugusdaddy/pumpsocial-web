@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://178.104.47.32:3001';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.agentpumpbook.fun';
 
 interface Agent {
   name: string;

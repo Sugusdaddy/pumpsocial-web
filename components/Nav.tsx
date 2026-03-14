@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://178.104.47.32:3001';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.agentpumpbook.fun';
 
 interface NavProps {
   children: React.ReactNode;
